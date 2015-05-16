@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test －－－－－－－</title>
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+
+</script>
+
+<!-- http://dict.youdao.com/wordbook/ajax?action=addword&q=love&date=Sat%20May%2016%202015%2014:21:26%20GMT+0800%20(CST)&le=eng -->
+
+
+<script>
+var $a,num=0;
+//加载文本
+window.onload = function loadXMLDoc()
+{
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.open("GET","e.txt",false);
+	xmlhttp.send();
+	 
+	var $r = /.+/g;
+	$a = xmlhttp.responseText.match($r);
+	// document.getElementById("box").innerHTML=$a[2];   //第3行；
+	console.log($a[num]);
+	addWord($a[num]);
+}
+
+
+
+
+
+
+
+	
+function addWord(word){
+	console.log(word);
+	$.ajax({
+	        type: 'GET',
+	        url: 'http://dict.youdao.com/wordbook/ajax',
+	        dataType: 'json',
+	        data:{action:'addword',q:word,date:new Date(),le:'eng'},
+	        // beforeSend: ajaxBeforeFn,
+	        success: function(data){
+
+	        		if(num == $a.length-1){
+	        			return;
+	        		}
+
+	        		if (data.message == "adddone") {
+	        			num ++;
+	        			addWord($a[num]);
+
+	        		}else{
+	        			console.log("第" + num + "行" + $a[0] + "| 插入失败，请查看....");
+	        			addWord($a[num]);
+	        		}
+	        },
+	        error: function(data){
+	        	console.log(data);
+	        }
+    });
+}
+
+</script>
+</body>
+</html>
